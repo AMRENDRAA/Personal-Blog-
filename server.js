@@ -11,7 +11,7 @@ const app = express();
 const connectDb = require('./Config/dbConnection');
 connectDb();
 app.use(express.json());
-
+//PROXY
 
 
 app.use(
@@ -27,11 +27,11 @@ app.use(
         },
     })
 );
-
+//ROUTES 
 
 app.use("/api/articles", require("./routes/articleRoute"));
 
-
+//not found middle ware
 app.use((req, res, next) => {
     res.status(404).json({
         success: false,
