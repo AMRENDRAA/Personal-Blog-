@@ -4,13 +4,33 @@ const dotenv = require("dotenv").config();
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
 
+
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // max requests per IP
+    message: "Too many requests, please try again later"
+});
+
 const app = express();
+var morgan = require('morgan')
 
+const helmet = require('helmet');
 
+// const rateLimit = require('express-rate-limit');
 
 const connectDb = require('./Config/dbConnection');
 connectDb();
+app.use(morgan('combined'))
+
+app.use(helmet());
+app.use(limiter);
 app.use(express.json());
+
+
+
+
+
 //PROXY
 
 
@@ -38,6 +58,10 @@ app.use((req, res, next) => {
         message: `Route not found: ${req.originalUrl}`
     });
 });
+
+//Rate Limiter 
+
+
 
 
 const port = process.env.PORT;
