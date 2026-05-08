@@ -50,6 +50,7 @@ app.use(
 //ROUTES 
 
 app.use("/api/articles", require("./routes/articleRoute"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 //not found middle ware
 app.use((req, res, next) => {
