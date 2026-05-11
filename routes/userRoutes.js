@@ -5,9 +5,16 @@ const { registeruser, loginuser, currentuser } = require('../controller/userCont
 
 
 router.post("/register", registeruser)
+//@ DESC LOGIN 
+// login user route 
 
+//
 router.post("/login", loginuser)
 
+//@desc Post 
+// Get the current user 
 router.post("/current", currentuser)
+
+
 
 module.exports = router;

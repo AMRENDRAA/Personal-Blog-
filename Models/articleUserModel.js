@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const articleschema = mongoose.Schema({
+const articleUserschema = mongoose.Schema({
 
     username: {
         type: String,
@@ -18,5 +18,8 @@ const articleschema = mongoose.Schema({
         minlength: [5, 'Username must be at least 5 characters long']
     }
 
+}, {
+    timestamps: true,
+
 })
-module.exports = mongoose.Model("articleschema", articleschema);
+module.exports = mongoose.model("articleUserschema", articleUserschema);
