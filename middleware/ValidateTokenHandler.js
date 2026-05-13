@@ -4,6 +4,8 @@ const validateToken = (req, res, next) => {
 
     const authHeader = req.headers.authorization;
 
+    // Token not present 
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
             message: "Authorization header missing"
@@ -18,6 +20,7 @@ const validateToken = (req, res, next) => {
             token,
             process.env.ACCESS_TOKEN_SECRET
         );
+        console.log(req);
 
         req.user = decoded;
 
@@ -29,6 +32,9 @@ const validateToken = (req, res, next) => {
             message: "Invalid token"
         });
     }
+
+    console.log("This is the middle ware");
+    next();
 };
 
 module.exports = { validateToken };

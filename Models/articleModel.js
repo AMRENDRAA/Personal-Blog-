@@ -17,3 +17,5 @@ const articleModel = moongose.Schema({
 })
 
 module.exports = moongose.model("articleModel", articleModel);
+
+
