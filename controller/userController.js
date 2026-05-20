@@ -3,6 +3,14 @@ const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken")
 
+
+// 1. Client sends registration request
+// 2. Backend validates input fields
+// 3. Backend checks if user already exists
+// 4. Password hashed using bcrypt
+// 5. User stored in database
+// 6. Success response sent to client
+
 const registeruser = async (req, res) => {
 
     try {
@@ -12,6 +20,7 @@ const registeruser = async (req, res) => {
         const { username, email, password } = req.body;
 
         //CHECK FOR THE VALID EMAIL ,USERNAME ,PASSWORD
+        // Backend validates input
 
         if (!username || !email || !password) {
 
@@ -23,6 +32,7 @@ const registeruser = async (req, res) => {
         }
 
         //SEARCH FOR THE USER 
+        //  Backend checks existing user
 
         const useravailable = await User.findOne({ email });
 
@@ -43,6 +53,7 @@ const registeruser = async (req, res) => {
 
         // create the new user here we will not store the password as plain
         // but we will store the hashed passsword
+        //Store user in DB
 
 
         const newuser = await User.create({
@@ -86,11 +97,22 @@ const registeruser = async (req, res) => {
 
 }
 
+//LOGIN FLOW 
+
+// 7. Client sends login request
+// 8. Backend validates credentials
+// 9. Backend finds user by email
+// 10. bcrypt compares passwords
+// 11. JWT access token generated
+// 12. Token sent to client
 
 const loginuser = async (req, res) => {
 
 
     try {
+
+        // Body will bring the email ,password 
+        //Backend validates fields
 
         const { email, password } = req.body;
         if (!email || !password) {
@@ -100,14 +122,25 @@ const loginuser = async (req, res) => {
             })
         }
 
+        // we will find the user if exist or not
+
         const user = await User.findOne({ email });
 
-        //compare password with hashed password 
+        //if user exists in db compare password with hashed password 
+
+        // bcrypt compares passwords
+
+        // JWT access token generated
 
         if (user && (await bcrypt.compare(password, user.password))) {
 
 
             const accesstoken = jwt.sign({
+
+                // jwt sign uses three parameter
+                // payload 
+                // access_token_Secret
+                // exprires in 
                 user: {
                     username: user.username,
                     email: user.email,
@@ -116,10 +149,15 @@ const loginuser = async (req, res) => {
 
 
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" })
+
+            // After generating the access token we will return the accesstoken to the user
+
             res.status(200).json({ accesstoken })
 
         } else {
             res.status(401).json({
+
+                // if failed 
                 status: "Failed",
 
                 err: "invalid credential"
@@ -130,6 +168,9 @@ const loginuser = async (req, res) => {
 
     } catch (err) {
         console.log(err);
+
+        // in case of any err
+
 
         return res.status(500).json({
             status: "Failed",
@@ -150,12 +191,24 @@ const loginuser = async (req, res) => {
 
 }
 
-
+// 13. Client accesses protected route
+// 14. Client sends JWT in Authorization header
+// 15. Middleware extracts token
+// 16. Middleware verifies token
+// 17. Decoded user extracted
+// 18. req.user attached
+// 19. next() passes control
+// 20. Protected controller executes
+// 21. Controller accesses req.user
+// 22. Response sent
 
 
 
 const currentuser = (req, res) => {
     res.send({ message: "this is current day" })
+
+    // here we will send the req.user data 
+
     res.status(200).json(req.user);
 
 }
