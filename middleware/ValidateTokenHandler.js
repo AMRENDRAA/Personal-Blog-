@@ -20,11 +20,13 @@ const validateToken = (req, res, next) => {
             token,
             process.env.ACCESS_TOKEN_SECRET
         );
-        console.log(req);
+
 
         req.user = decoded;
+        console.log(decoded);
+        console.log(req.user);
 
-        next();
+
 
     } catch (err) {
 

@@ -13,6 +13,9 @@ const limiter = rateLimit({
 });
 
 const app = express();
+const swaggerUi = require("swagger-ui-express");
+
+const swaggerSpec = require("./swagger");
 var morgan = require('morgan')
 
 const helmet = require('helmet');
@@ -51,6 +54,12 @@ app.use(
 
 app.use("/api/articles", require("./routes/articleRoute"));
 app.use("/api/users", require("./routes/userRoutes"));
+
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+);
 
 //not found middle ware
 app.use((req, res, next) => {
