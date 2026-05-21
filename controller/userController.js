@@ -116,7 +116,7 @@ const loginuser = async (req, res) => {
 
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(400).json({
+            return res.status(400).json({
                 status: " Failed",
                 message: "Enter email or password"
             })
@@ -150,9 +150,29 @@ const loginuser = async (req, res) => {
 
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" })
 
-            // After generating the access token we will return the accesstoken to the user
 
-            res.status(200).json({ accesstoken })
+
+
+            //Now we will implement the Refresh token 
+
+            const refreshToken = jwt.sign(
+                { id: user.id },
+                process.env.REFRESH_TOKEN_SECRET,
+                { expiresIn: "7d" }
+
+            )
+
+            res.cookie('refreshToken', refreshtoken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+
+            // After generating the access token we will return the accesstoken to the user
+            console.log(refreshToken);
+
+            return res.status(200).json({ accesstoken })
 
         } else {
             res.status(401).json({

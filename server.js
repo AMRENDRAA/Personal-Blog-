@@ -29,7 +29,9 @@ app.use(morgan('combined'))
 app.use(helmet());
 app.use(limiter);
 app.use(express.json());
+const cookieParser = require("cookie-parser");
 
+app.use(cookieParser());
 
 
 

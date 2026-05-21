@@ -78,7 +78,12 @@ router.post("/login", loginuser)
 router.post("/current", validateToken, currentuser)
 
 
+// POST /refresh
+// POST /logout
 
+
+// router.post("/refresh",)
+// router.post("/logout",)
 module.exports = router;
 
 
