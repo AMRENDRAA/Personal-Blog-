@@ -233,10 +233,66 @@ const currentuser = (req, res) => {
 
 }
 
+
+const refreshTokenHandler = async (req, res) => {
+
+    //Get cookies from request
+
+    const cookies = req.cookies;
+
+    //check if refresh token exists 
+    if (!cookies || !cookies.refreshToken) {
+        return res.status(401).json({
+            status: "Failed",
+            message: "refresh token missing "
+        })
+    }
+
+    // Extract refresh token
+
+    const refreshToken = cookies.refreshToken;
+
+    try {
+        //verify refresh token 
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        //GENERATE NEW ACCESS TOKEN 
+
+        const accessToken = jwt.sign(
+            {
+                user: {
+                    id: decoded.id
+
+                }
+
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" }
+
+        )
+
+        return res.status(200).json({
+            status: "Success",
+            accessToken
+        });
+
+    } catch (err) {
+        return res.status(403).json({
+            status: "Failed",
+            message: "Invalid or expired refresh token"
+        });
+
+
+
+
+    }
+
+}
+
+
+
 module.exports = {
     registeruser,
     loginuser,
-    currentuser
+    currentuser,
+    refreshTokenHandler
 }
 
 
