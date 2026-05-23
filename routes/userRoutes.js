@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { registeruser, loginuser, currentuser } = require('../controller/userController');
+const { registeruser, loginuser, currentuser, logout, refreshTokenHandler } = require('../controller/userController');
 const { validateToken } = require('../middleware/ValidateTokenHandler')
 
 //@ DESC LOGIN 
@@ -81,9 +81,12 @@ router.post("/current", validateToken, currentuser)
 // POST /refresh
 // POST /logout
 
-router.post("/refresh", refreshTokenHandler);
+router.post("/refresh", validateToken, refreshTokenHandler);
 // router.post("/refresh",)
 // router.post("/logout",)
+
+router.post("/logout", logout);
+
 module.exports = router;
 
 
